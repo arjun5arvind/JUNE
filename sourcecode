@@ -1,0 +1,124 @@
+import pyttsx3
+import speech_recognition as sr
+import pywhatkit
+import pyjokes as pj
+from datetime import datetime as dt
+from pathlib import Path
+
+engine = pyttsx3.init()
+voice_intake = sr.Recognizer()
+
+voice_intake.energy_threshold = 700 #To specify the voice intake sensitivity
+
+voices = engine.getProperty('voices')
+voices = engine.setProperty('voice', voices[1].id)
+
+engine.say("I am June, , Your virtual partner")
+engine.say('How may I be of service')
+print(' I am June,your virtual partner ,how may i be of service')
+engine.runAndWait()
+
+
+def talk(text):
+    engine.say(text)
+    engine.runAndWait()
+
+
+def command_input():
+    my_mic = sr.Microphone(device_index=1)    #specifying source of input
+    try:
+        with my_mic as source:
+            print("Listening...")
+            command = voice_intake.listen(source)
+            command = voice_intake.recognize_google(command)
+            command = command.lower()
+        if "june" in command:
+            command = command.replace('june', '')
+        print(command)
+
+    except Exception:
+        pass
+    return command
+
+
+def run_june():
+    command = command_input()
+    if 'what can you do' in command:
+        menu()
+    if 'diary' in command:
+        diary()
+
+
+
+    if 'play' in command:
+        song = command.replace('play', '')
+        print('playing' + song)
+        talk('playing ' + song)
+        pywhatkit.playonyt(song)
+    elif "introduce yourself" in command:
+        intro = "I am a virtual assistant made my Arjun Aravind and Adnan Bava"
+        print(intro)
+        talk(intro)
+    elif 'joke' in command:
+        joke = pj.get_joke()
+        print(joke)
+        talk(joke)
+    elif "help me" in command:
+        help_me = 'You got this , do your best and put in the efforts and success will be yours. Take up one idea. ' \
+                  'Make that one idea your life--think of it, dream of it, live on that idea. ' \
+                  'Let the brain, muscles, nerves, every part of your body, be full of that idea, ' \
+                  'and just leave every other idea alone. ' \
+                  'This is the way to success.'
+        print(help_me)
+        talk(help_me)
+
+def menu():
+    print("Here are some of the things that i can do: \n 1.Joke\n2.Music\n3.Diary\n4.Youtube Video\n 5.Exit")
+    talk("Here are some of the things that i can do: 1 Joke 2 Music 3 Diary 4 Youtube Video 5 Exit")
+    print("Make your choice:")
+    talk("Make your choice:")
+    choice_menu = command_input()
+    if 'diary' in choice_menu:
+        diary()
+
+
+
+
+
+
+def diary_new_entry():
+    a = dt.now()
+    cur_date_time = a.strftime("%d_%m_%Y_%H_%M_%S" + ".txt")
+
+    # print(cur_date_time)
+
+    data_file = Path("D:\AI_PARTNER\Diary_Data" + '/' + cur_date_time)
+    # print(data_file)
+
+    print("You may now start to speak your journal entry:")
+    talk("You may now start to speak your journal entry:")
+    data_unconfirmed = command_input()
+    engine.runAndWait()
+    print(data_unconfirmed)
+    print("\n Would you like to save this entry or retake the entry?")
+    talk("\n Would you like to save this entry or retake the entry?")
+    option = command_input()
+    engine.runAndWait()
+    if 'save' in option:
+        data_confirmed = data_unconfirmed
+        f = open(data_file, 'a+')
+        f.write(data_confirmed)
+        print(f.read())
+    else:
+        diary_new_entry()
+
+def diary():
+    print("Would you like to make a new entry or view old entries?")
+    talk("Would you like to make a new entry or view old entries?")  #problem arises after this line
+    diary_choice = command_input()
+    engine.runAndWait()
+    if 'new entry' in diary_choice:
+        diary_new_entry()
+        engine.runAndWait()
+while True:
+    run_june()
