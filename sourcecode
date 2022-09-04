@@ -48,8 +48,6 @@ def run_june():
     if 'diary' in command:
         diary()
 
-
-
     if 'play' in command:
         song = command.replace('play', '')
         print('playing' + song)
@@ -80,10 +78,6 @@ def menu():
     choice_menu = command_input()
     if 'diary' in choice_menu:
         diary()
-
-
-
-
 
 
 def diary_new_entry():
