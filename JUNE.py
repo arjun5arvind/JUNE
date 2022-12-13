@@ -13,8 +13,6 @@ import os
 engine=pyttsx3.init()
 voice_intake=sr.Recognizer()
 
-my_mic=sr.Microphone(device_index=1)
-
 voice_intake.energy_threshold = 700 
 
 voices = engine.getProperty('voices')
